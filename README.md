@@ -14,7 +14,7 @@ ACL2020 Best Paper有一篇论文提名奖，《Don’t Stop Pretraining: Adapt 
 
 * 如果无法获取更多的、任务相关的无标注数据，采取一种十分轻量化的简单数据选择策略，效果也会提升。
 
-**———————————————————————————————————————————————🤗前方高能🤗————————————————————————————————————————————**
+**——————————————————🤗前方高能🤗——————————————————**
 
 对GPT、GPT-2、GPT文本数据集上的语言建模库模型进行微调(或从头开始训练)。ALBERT, BERT, distillbert, RoBERTa, XLNet… GPT和GPT-2使用因果语言建模进行训练或微调  
 (CLM)丢失，而ALBERT、BERT、DistilBERT和RoBERTa使用掩码语言建模(MLM)进行训练或微调的损失。 XLNet使用排列语言建模(PLM)，关于它们之间差异的更多信息[模型总结](https://huggingface.co/transformers/model_summary.html)
