@@ -8,6 +8,5 @@ CUDA_VISIBLE_DEVICES=0,1  python run_mlm.py \
 --train_data_file=train.txt \
 --do_eval \
 --eval_data_file=eval.txt \
---line_by_line \
 --per_device_train_batch_size=8 \
 >> mlm.log 2>&1 &
