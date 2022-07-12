@@ -143,6 +143,7 @@ if __name__ == "__main__":
         default="./resources/chinese-demo.txt",
         help="file need process, same as training data in lm",
     )
+    # https://github.com/HIT-SCIR/ltp
     parser.add_argument(
         "--ltp", type=str, default="./resources/ltp", help="resources for LTP tokenizer, usually a path"
     )
