@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CUDA_VISIBLE_DEVICES=0,1  python run_mlm_www_v2.py \
+CUDA_VISIBLE_DEVICES=0,1  python run_mlm_www.py \
 --model_name_or_path hfl/chinese-roberta-wwm-ext \
 --train_file train_www.txt \
 --validation_file eval_www.txt \
