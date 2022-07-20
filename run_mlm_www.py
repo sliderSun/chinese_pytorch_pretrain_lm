@@ -491,14 +491,14 @@ def main():
         # To speed up this part, we use multiprocessing. See the documentation of the map method for more information:
         # https://huggingface.co/docs/datasets/package_reference/main_classes.html#datasets.Dataset.map
         # TODO
-        # with training_args.main_process_first(desc="grouping texts together"):
-        #     tokenized_datasets = tokenized_datasets.map(
-        #         group_texts,
-        #         batched=True,
-        #         num_proc=data_args.preprocessing_num_workers,
-        #         load_from_cache_file=not data_args.overwrite_cache,
-        #         desc=f"Grouping texts in chunks of {max_seq_length}",
-        #     )
+        with training_args.main_process_first(desc="grouping texts together"):
+            tokenized_datasets = tokenized_datasets.map(
+                group_texts,
+                batched=True,
+                num_proc=data_args.preprocessing_num_workers,
+                load_from_cache_file=not data_args.overwrite_cache,
+                desc=f"Grouping texts in chunks of {max_seq_length}",
+            )
 
     if training_args.do_train:
         if "train" not in tokenized_datasets:
