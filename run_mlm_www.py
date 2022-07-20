@@ -499,6 +499,17 @@ def main():
                 load_from_cache_file=not data_args.overwrite_cache,
                 desc=f"Grouping texts in chunks of {max_seq_length}",
             )
+    # Add the chinese references if provided
+    if data_args.train_ref_file is not None:
+        tokenized_datasets["train"] = add_chinese_references(tokenized_datasets["train"], data_args.train_ref_file)
+    if data_args.validation_ref_file is not None:
+        tokenized_datasets["validation"] = add_chinese_references(
+            tokenized_datasets["validation"], data_args.validation_ref_file
+        )
+    # If we have ref files, need to avoid it removed by trainer
+    has_ref = data_args.train_ref_file or data_args.validation_ref_file
+    if has_ref:
+        training_args.remove_unused_columns = False
 
     if training_args.do_train:
         if "train" not in tokenized_datasets:
@@ -546,17 +557,6 @@ def main():
     #     pad_to_multiple_of=8 if pad_to_multiple_of_8 else None,
     # )
 
-    # Add the chinese references if provided
-    if data_args.train_ref_file is not None:
-        tokenized_datasets["train"] = add_chinese_references(tokenized_datasets["train"], data_args.train_ref_file)
-    if data_args.validation_ref_file is not None:
-        tokenized_datasets["validation"] = add_chinese_references(
-            tokenized_datasets["validation"], data_args.validation_ref_file
-        )
-    # If we have ref files, need to avoid it removed by trainer
-    has_ref = data_args.train_ref_file or data_args.validation_ref_file
-    if has_ref:
-        training_args.remove_unused_columns = False
     data_collator = DataCollatorForWholeWordMask(
         tokenizer=tokenizer,
         mlm_probability=data_args.mlm_probability,
