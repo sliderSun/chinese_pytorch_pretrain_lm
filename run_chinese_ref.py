@@ -7,6 +7,7 @@
 import argparse
 import json
 from typing import List
+from tqdm import tqdm
 
 from ltp import LTP
 from transformers.models.bert.tokenization_bert import BertTokenizer
@@ -23,14 +24,14 @@ def _is_chinese_char(cp):
     # space-separated words, so they are not treated specially and handled
     # like the all of the other languages.
     if (
-        (cp >= 0x4E00 and cp <= 0x9FFF)
-        or (cp >= 0x3400 and cp <= 0x4DBF)  #
-        or (cp >= 0x20000 and cp <= 0x2A6DF)  #
-        or (cp >= 0x2A700 and cp <= 0x2B73F)  #
-        or (cp >= 0x2B740 and cp <= 0x2B81F)  #
-        or (cp >= 0x2B820 and cp <= 0x2CEAF)  #
-        or (cp >= 0xF900 and cp <= 0xFAFF)
-        or (cp >= 0x2F800 and cp <= 0x2FA1F)  #
+            (cp >= 0x4E00 and cp <= 0x9FFF)
+            or (cp >= 0x3400 and cp <= 0x4DBF)  #
+            or (cp >= 0x20000 and cp <= 0x2A6DF)  #
+            or (cp >= 0x2A700 and cp <= 0x2B73F)  #
+            or (cp >= 0x2B740 and cp <= 0x2B81F)  #
+            or (cp >= 0x2B820 and cp <= 0x2CEAF)  #
+            or (cp >= 0xF900 and cp <= 0xFAFF)
+            or (cp >= 0x2F800 and cp <= 0x2FA1F)  #
     ):  #
         return True
 
@@ -69,7 +70,7 @@ def add_sub_symbol(bert_tokens: List[str], chinese_word_set: set()):
         if is_chinese(bert_word[start]):
             l = min(end - start, max_word_len)
             for i in range(l, 1, -1):
-                whole_word = "".join(bert_word[start : start + i])
+                whole_word = "".join(bert_word[start: start + i])
                 if whole_word in chinese_word_set:
                     for j in range(start + 1, start + i):
                         bert_word[j] = "##" + bert_word[j]
@@ -84,15 +85,15 @@ def add_sub_symbol(bert_tokens: List[str], chinese_word_set: set()):
 def prepare_ref(lines: List[str], ltp_tokenizer: LTP, bert_tokenizer: BertTokenizer):
     ltp_res = []
 
-    for i in range(0, len(lines), 100):
-        res = ltp_tokenizer.seg(lines[i : i + 100])[0]
+    for i in tqdm(range(0, len(lines), 100), desc="ltp tokenizer"):
+        res = ltp_tokenizer.seg(lines[i: i + 100])[0]
         res = [get_chinese_word(r) for r in res]
         ltp_res.extend(res)
     assert len(ltp_res) == len(lines)
 
     bert_res = []
-    for i in range(0, len(lines), 100):
-        res = bert_tokenizer(lines[i : i + 100], add_special_tokens=True, truncation=True, max_length=512)
+    for i in tqdm(range(0, len(lines), 100), desc="bert tokenizer"):
+        res = bert_tokenizer(lines[i: i + 100], add_special_tokens=True, truncation=True, max_length=512)
         bert_res.extend(res["input_ids"])
     assert len(bert_res) == len(lines)
 
@@ -100,8 +101,8 @@ def prepare_ref(lines: List[str], ltp_tokenizer: LTP, bert_tokenizer: BertTokeni
     for input_ids, chinese_word in zip(bert_res, ltp_res):
 
         input_tokens = []
-        for id in input_ids:
-            token = bert_tokenizer._convert_id_to_token(id)
+        for input_id in input_ids:
+            token = bert_tokenizer._convert_id_to_token(input_id)
             input_tokens.append(token)
         input_tokens = add_sub_symbol(input_tokens, chinese_word)
         ref_id = []
