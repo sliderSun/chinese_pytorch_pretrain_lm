@@ -33,7 +33,7 @@ import datasets
 from datasets import Dataset, load_dataset, load_metric
 
 import transformers
-from transformers import BertForMaskedLM, BertTokenizer
+from transformers import BertForMaskedLM, BertTokenizer, TextDatasetForNextSentencePrediction
 from transformers import (
     CONFIG_MAPPING,
     MODEL_FOR_MASKED_LM_MAPPING,
@@ -326,7 +326,6 @@ def main():
             cache_dir=model_args.cache_dir,
             use_auth_token=True if model_args.use_auth_token else None,
         )
-
         # If no validation data is there, validation_split_percentage will be used to divide the dataset.
         if "validation" not in raw_datasets.keys():
             raw_datasets["validation"] = load_dataset(
@@ -517,6 +516,12 @@ def main():
         tokenized_datasets["validation"] = add_chinese_references(
             tokenized_datasets["validation"], data_args.validation_ref_file
         )
+    # TODO add NextSentence 2022/08/01
+    # dataset = TextDatasetForNextSentencePrediction(
+    #     tokenizer=tokenizer,
+    #     file_path=data_args.train_file,
+    #     block_size=256
+    # )
     # If we have ref files, need to avoid it removed by trainer
     has_ref = data_args.train_ref_file or data_args.validation_ref_file
     if has_ref:
