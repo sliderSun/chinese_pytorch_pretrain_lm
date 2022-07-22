@@ -82,17 +82,17 @@ def add_sub_symbol(bert_tokens: List[str], chinese_word_set: set()):
     return bert_word
 
 
-def prepare_ref(lines: List[str], ltp_tokenizer: LTP, bert_tokenizer: BertTokenizer):
+def prepare_ref(lines: List[str], ltp_tokenizer: LTP, bert_tokenizer: BertTokenizer, desc: str):
     ltp_res = []
 
-    for i in tqdm(range(0, len(lines), 100), desc="ltp tokenizer"):
+    for i in tqdm(range(0, len(lines), 100), desc="{} ltp tokenizer".format(desc)):
         res = ltp_tokenizer.seg(lines[i: i + 100])[0]
         res = [get_chinese_word(r) for r in res]
         ltp_res.extend(res)
     assert len(ltp_res) == len(lines)
 
     bert_res = []
-    for i in tqdm(range(0, len(lines), 100), desc="bert tokenizer"):
+    for i in tqdm(range(0, len(lines), 100), desc="{} bert tokenizer".format(desc)):
         res = bert_tokenizer(lines[i: i + 100], add_special_tokens=True, truncation=True, max_length=512)
         bert_res.extend(res["input_ids"])
     assert len(bert_res) == len(lines)
@@ -123,17 +123,25 @@ def prepare_ref(lines: List[str], ltp_tokenizer: LTP, bert_tokenizer: BertTokeni
 def main(args):
     # For Chinese (Ro)Bert, the best result is from : RoBERTa-wwm-ext (https://github.com/ymcui/Chinese-BERT-wwm)
     # If we want to fine-tune these model, we have to use same tokenizer : LTP (https://github.com/HIT-SCIR/ltp)
-    with open(args.file_name, "r", encoding="utf-8") as f:
-        data = f.readlines()
-    data = [line.strip() for line in data if len(line) > 0 and not line.isspace()]  # avoid delimiter like '\u2029'
+    file_names = []
+    save_paths = []
+    if "," in args.file_name and "," in args.save_path:
+        file_names = args.file_name.split(",")
+        save_paths = args.save_path.split(",")
+    else:
+        file_names.extend(args.file_name)
+        save_paths.extend(args.save_path)
+    assert len(file_names) == len(save_paths)
     ltp_tokenizer = LTP(args.ltp)  # faster in GPU device
     bert_tokenizer = BertTokenizer.from_pretrained(args.bert)
-
-    ref_ids = prepare_ref(data, ltp_tokenizer, bert_tokenizer)
-
-    with open(args.save_path, "w", encoding="utf-8") as f:
-        data = [json.dumps(ref) + "\n" for ref in ref_ids]
-        f.writelines(data)
+    for file_name, save_path in zip(file_names, save_paths):
+        with open(file_name, "r", encoding="utf-8") as f:
+            data = f.readlines()
+        data = [line.strip() for line in data if len(line) > 0 and not line.isspace()]  # avoid delimiter like '\u2029'
+        ref_ids = prepare_ref(data, ltp_tokenizer, bert_tokenizer, file_name)
+        with open(save_path, "w", encoding="utf-8") as f:
+            data = [json.dumps(ref) + "\n" for ref in ref_ids]
+            f.writelines(data)
 
 
 if __name__ == "__main__":
