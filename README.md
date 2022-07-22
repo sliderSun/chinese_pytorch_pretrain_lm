@@ -155,5 +155,74 @@ python run_clm.py --model_type gpt2 --tokenizer_name gpt2 \ --config_overrides="
 此功能仅在 `run_clm.py`, `run_plm.py` 和 `run_mlm.py`.
 
 
-
-
+**提示:**  run_mlm_www TrainingArguments 参数解析
+### 开始
+    output_dir（：obj：`str`）：
+        模型预测和检查点的输出目录。必须声明的字段。
+    overwrite_output_dir（：obj：`bool`，`optional`，默认为：obj：`False`）：
+        如果为True，则覆盖输出目录的内容。使用此继续训练，如果`output_dir`指向检查点目录。
+    do_train（：obj：`bool`，`可选`，默认为：obj：`False`）：
+        是否进行训练。
+    do_eval（：obj：`bool`，`optional`，默认为：obj：`False`）：
+        是否在验证集上运行评估。
+    do_predict（：obj：`bool`，`optional`，默认为：obj：`False`）：
+        是否在测试集上运行预测。
+    validate_during_training（：obj：`bool`，`optional`，默认为：obj：`False`）：
+        是否在每个记录步骤的训练过程中进行评估。
+    per_device_train_batch_size（：obj：`int`，`optional`，默认为8）：
+        每个GPU / TPU内核/ CPU的批处理大小。
+    per_device_eval_batch_size（：obj：`int`，`optional`，默认为8）：
+        每个GPU / TPU内核/ CPU的批处理大小，以进行评估。
+    gradient_accumulation_steps：（：obj：`int`，`optional`，默认为1）：
+        在执行反向传播/更新过程之前，要累积其梯度的更新步骤数。
+    learning_rate（：obj：`float`，`optional`，默认为5e-5）：
+        Adam初始学习率。#这里不知道为什么强调Adam？
+    weight_decay（：obj：`float`，`optional`，默认为0）：
+        要应用的权重衰减（如果不为零）。
+    adam_epsilon（：obj：`float`，`optional`，默认为1e-8）：
+        Epsilon，用于Adam优化器。
+    max_grad_norm（：obj：`float`，`optional`，默认为1.0）：
+        最大渐变范数（用于渐变裁剪）。
+    num_train_epochs（：obj：`float`，`optional`，默认为3.0）：
+        要执行的训练轮数总数。
+    max_steps（：obj：`int`，`optional`，默认为-1）：
+        如果设置为正数，则要执行的训练步骤总数。覆写
+        ：obj：`num_train_epochs`。
+    warmup_steps（：obj：`int`，`optional`，默认为0）：
+        线性预热所用的步数（从0到：learning_rate）。
+    logging_dir（：obj：`str`，`optional`）：
+        Tensorboard日志目录。将默认为`runs / ** CURRENT_DATETIME_HOSTNAME **`。用当前时间构造
+    logging_first_step（：obj：`bool`，`optional`，默认为：obj：`False`）：
+        是否需要记录和评估第一个：obj：`global_step`或没有。
+    logging_steps（：obj：`int`，`optional`，默认为500）：
+        两个日志记录之间的更新步骤数。
+    save_steps（：obj：`int`，`optional`，默认为500）：
+        保存两个检查点之前的更新步骤数。
+    save_total_limit（：obj：`int`，`Optional`）：
+        如果设置具体数值，将限制检查点的总数。删除中的旧检查点
+        ：obj：`output_dir`。
+    no_cuda（：obj：`bool`，`optional`，默认为：obj：`False`）：
+        设置是否不使用CUDA，即使没有CUDA。（大家都是有GPU的，就不要碰这个选项啦）
+    seed（：obj：`int`，`可选`，默认为42）：
+        用于初始化的随机种子。
+    fp16（：obj：`bool`，`可选`，默认为：obj：`False`）：
+        是否使用16位混合精度训练（通过NVIDIA apex）而不是32位训练。
+    fp16_opt_level（：obj：`str`，`optional`，默认为'O1'）：
+        对于fp16训练，请在['O0'，'O1'，'O2'和'O3']中选择顶点AMP优化级别。查看详细信息
+        在`apex文档<https://nvidia.github.io/apex/amp.html>`__中。
+    local_rank（：obj：`int`，`optional`，默认为-1）：
+        在分布式训练中进行设置。
+    tpu_num_cores（：obj：`int`，`optional`）：
+        在TPU上进行训练时，会占用大量TPU核心（由启动脚本自动传递）。
+    debug（：obj：`bool`，`optional`，默认为：obj：`False`）：
+        在TPU上进行训练时，是否打印调试指标。
+    dataloader_drop_last（：obj：`bool`，`optional`，默认为：obj：`False`）：
+        是否删除最后一个不完整的批次。
+    eval_steps（：obj：`int`，`optional`，默认为1000）：
+        两次评估之间的更新步骤数。
+    past_index（：obj：`int`，`optional`，默认为-1）：
+        诸如TransformerXL <../ model_doc / transformerxl>或docNet XLNet <../ model_doc / xlnet>之类的某些模型可以
+        利用过去的隐藏状态进行预测。如果将此参数设置为正整数，则
+        在关键字参数``mems``下，``Trainer`` 将使用相应的输出（通常是索引2）作为过去的状态并将其输入下一个训练步骤中。
+### 结束
+    
