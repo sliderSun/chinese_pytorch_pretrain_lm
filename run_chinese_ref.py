@@ -146,7 +146,7 @@ if __name__ == "__main__":
     )
     # https://github.com/HIT-SCIR/ltp
     parser.add_argument(
-        "--ltp", type=str, default="./resources/ltp", help="resources for LTP tokenizer, usually a path"
+        "--ltp", type=str, default="small", help="resources for LTP tokenizer, usually a path"
     )
     parser.add_argument("--bert", type=str, default="hfl/chinese-roberta-wwm-ext", help="resources for Bert tokenizer")
     parser.add_argument("--save_path", type=str, default="./data/train_ref_8.txt", help="path to save res")
