@@ -129,8 +129,8 @@ def main(args):
         file_names = args.file_name.split(",")
         save_paths = args.save_path.split(",")
     else:
-        file_names.extend(args.file_name)
-        save_paths.extend(args.save_path)
+        file_names.extend([args.file_name])
+        save_paths.extend([args.save_path])
     assert len(file_names) == len(save_paths)
     ltp_tokenizer = LTP(args.ltp)  # faster in GPU device
     bert_tokenizer = BertTokenizer.from_pretrained(args.bert)
@@ -149,7 +149,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--file_name",
         type=str,
-        default="./data/poi_ronghe_pretraind_8.txt",
+        default="./data/test.txt",
         help="file need process, same as training data in lm",
     )
     # https://github.com/HIT-SCIR/ltp
@@ -157,7 +157,7 @@ if __name__ == "__main__":
         "--ltp", type=str, default="small", help="resources for LTP tokenizer, usually a path"
     )
     parser.add_argument("--bert", type=str, default="hfl/chinese-roberta-wwm-ext", help="resources for Bert tokenizer")
-    parser.add_argument("--save_path", type=str, default="./data/train_ref_8.txt", help="path to save res")
+    parser.add_argument("--save_path", type=str, default="./data/test_ref.txt", help="path to save res")
 
     args = parser.parse_args()
     main(args)
