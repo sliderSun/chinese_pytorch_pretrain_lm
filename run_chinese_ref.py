@@ -141,15 +141,15 @@ if __name__ == "__main__":
     parser.add_argument(
         "--file_name",
         type=str,
-        default="./resources/chinese-demo.txt",
+        default="./data/poi_ronghe_pretraind_8.txt",
         help="file need process, same as training data in lm",
     )
     # https://github.com/HIT-SCIR/ltp
     parser.add_argument(
         "--ltp", type=str, default="./resources/ltp", help="resources for LTP tokenizer, usually a path"
     )
-    parser.add_argument("--bert", type=str, default="./resources/robert", help="resources for Bert tokenizer")
-    parser.add_argument("--save_path", type=str, default="./resources/ref.txt", help="path to save res")
+    parser.add_argument("--bert", type=str, default="hfl/chinese-roberta-wwm-ext", help="resources for Bert tokenizer")
+    parser.add_argument("--save_path", type=str, default="./data/train_ref_8.txt", help="path to save res")
 
     args = parser.parse_args()
     main(args)
