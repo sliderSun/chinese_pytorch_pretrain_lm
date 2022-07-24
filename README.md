@@ -167,8 +167,12 @@ python run_clm.py --model_type gpt2 --tokenizer_name gpt2 \ --config_overrides="
         是否在验证集上运行评估。
     do_predict（：obj：`bool`，`optional`，默认为：obj：`False`）：
         是否在测试集上运行预测。
-    validate_during_training（：obj：`bool`，`optional`，默认为：obj：`False`）：
-        是否在每个记录步骤的训练过程中进行评估。
+    evaluation_strategy(`str` or [`~trainer_utils.IntervalStrategy`], *optional*, defaults to `"no"`):
+            The evaluation strategy to adopt during training. Possible values are:
+
+                - `"no"`: No evaluation is done during training.
+                - `"steps"`: Evaluation is done (and logged) every `eval_steps`.
+                - `"epoch"`: Evaluation is done at the end of each epoch.
     per_device_train_batch_size（：obj：`int`，`optional`，默认为8）：
         每个GPU / TPU内核/ CPU的批处理大小。
     per_device_eval_batch_size（：obj：`int`，`optional`，默认为8）：
@@ -224,5 +228,10 @@ python run_clm.py --model_type gpt2 --tokenizer_name gpt2 \ --config_overrides="
         诸如TransformerXL <../ model_doc / transformerxl>或docNet XLNet <../ model_doc / xlnet>之类的某些模型可以
         利用过去的隐藏状态进行预测。如果将此参数设置为正整数，则
         在关键字参数``mems``下，``Trainer`` 将使用相应的输出（通常是索引2）作为过去的状态并将其输入下一个训练步骤中。
+    ignore_data_skip (`bool`, *optional*, defaults to `False`):
+            When resuming training, whether or not to skip the epochs and batches to get the data loading at the same
+            stage as in the previous training. If set to `True`, the training will begin faster (as that skipping step
+            can take a long time) but will not yield the same results as the interrupted training would have.
+    --resume_from_checkpoint ./output/checkpoint-56500 
 ### 结束
     
