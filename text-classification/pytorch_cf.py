@@ -32,48 +32,48 @@ config_path = path + r'\bert_config.json'
 checkpoint_path = path + r'\pytorch_model.bin'
 dict_path = path + r'\vocab.txt'
 
-# def load_data(filename):
-#     """加载数据
-#     单条格式：(文本1, 文本2, 标签id)
-#     """
-#     D = []
-#     with open(filename, encoding='utf-8') as f:
-#         for l in f:
-#             text1, text2, label = l.strip().split('\t')
-#             D.append((text1, text2, int(label)))
-#     return D
-
 def load_data(filename):
     """加载数据
     单条格式：(文本1, 文本2, 标签id)
     """
     D = []
-    data = fa.read_json(filename)
-    for d in data:
-        text1, text2, label = d[0], d[1], d[2]
-        D.append((text1, text2, int(label)))
+    with open(filename, encoding='utf-8') as f:
+        for l in f:
+            text1, text2, label = l.strip().split('\t')
+            D.append((text1, text2, int(label)))
     return D
 
-task_name = 'cf'
-# task_name = 'LCQMC'
+# def load_data(filename):
+#     """加载数据
+#     单条格式：(文本1, 文本2, 标签id)
+#     """
+#     D = []
+#     data = fa.read_json(filename)
+#     for d in data:
+#         text1, text2, label = d[0], d[1], d[2]
+#         D.append((text1, text2, int(label)))
+#     return D
+
+# task_name = 'cf'
+task_name = 'LCQMC'
 data_path = './data/'
-datasets = [
-    load_data('%s/%s/%s_cf.json' % (data_path, task_name, f))
-    for f in ['train', 'valid']
-]
 # datasets = [
-#     load_data('%s%s/%s.%s.data' % (data_path, task_name, task_name, f))
-#     # for f in ['train', 'valid', 'test']
+#     load_data('%s/%s/%s_cf.json' % (data_path, task_name, f))
+#     for f in ['train', 'valid']
 # ]
+datasets = [
+    load_data('%s%s/%s.%s.data' % (data_path, task_name, task_name, f))
+    for f in ['train', 'valid', 'test']
+]
 
 # 加载数据集
-train_data, valid_data = datasets
-# train_data, valid_data, test_data = datasets
+# train_data, valid_data = datasets
+train_data, valid_data, test_data = datasets
 train_data = train_data
-# train_data = train_data[:10000]
+train_data = train_data[:1000]
 valid_data = valid_data
-# valid_data = valid_data[:10000]
-# test_data = test_data[:10000]
+valid_data = valid_data[:500]
+test_data = test_data[:500]
 
 # 建立分词器
 tokenizer = Tokenizer(dict_path, do_lower_case=True)
